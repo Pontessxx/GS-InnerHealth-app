@@ -50,10 +50,19 @@ function AppTabsContent() {
   }
 
   return (
-    <>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor:
+          theme === "dark"
+            ? DarkTheme.background
+            : LightTheme.background,
+      }}
+    >
       <Tabs
         screenOptions={{
           headerShown: false,
+          animation: "shift",
           tabBarActiveTintColor:
             theme === "dark"
               ? DarkTheme.primary
@@ -63,15 +72,24 @@ function AppTabsContent() {
               theme === "dark"
                 ? DarkTheme.card
                 : LightTheme.card,
-                borderTopColor: "transparent"
+            borderTopColor: "transparent",
+            borderTopWidth: 0,
+            elevation: 0,
+            shadowOpacity: 0,
           },
-          animation: "shift",
+          // 🔥 evita flash branco entre as telas
+          sceneStyle: {
+            backgroundColor:
+              theme === "dark"
+                ? DarkTheme.background
+                : LightTheme.background,
+          },
         }}
       >
         <Tabs.Screen
           name="index"
           options={{
-            title: "index",
+            title: "Home",
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="home-outline" size={size} color={color} />
             ),
@@ -80,7 +98,7 @@ function AppTabsContent() {
         <Tabs.Screen
           name="settings"
           options={{
-            title: "settings",
+            title: "Configurações",
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="settings-outline" size={size} color={color} />
             ),
@@ -88,8 +106,9 @@ function AppTabsContent() {
         />
       </Tabs>
       <Toast />
-    </>
+    </View>
   );
+
 }
 
 export default function AppLayout() {
