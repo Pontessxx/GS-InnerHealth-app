@@ -63,7 +63,9 @@ function AppTabsContent() {
               theme === "dark"
                 ? DarkTheme.card
                 : LightTheme.card,
+                borderTopColor: "transparent"
           },
+          animation: "shift",
         }}
       >
         <Tabs.Screen
@@ -72,6 +74,15 @@ function AppTabsContent() {
             title: "index",
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="home-outline" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="settings"
+          options={{
+            title: "settings",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="settings-outline" size={size} color={color} />
             ),
           }}
         />

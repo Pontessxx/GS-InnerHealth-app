@@ -15,11 +15,19 @@ export const LightTheme = {
 
   // 🔘 Botões
   buttonBackground: Colors.success,
+  buttonExitBackground: Colors.error,
   buttonText: Colors.textDark,
 
   // 🔗 Links e destaques
   link: Colors.info,
   primary: Colors.primary,
+
+  // 🎚 Switch
+  switchTrackOn: Colors.switchTrackOn,
+  switchTrackOff: Colors.switchTrackOff,
+  switchThumbOn: Colors.switchThumbOn,
+  switchThumbOff: Colors.switchThumbOff,
+  switchIOSBackground: Colors.switchIOSBackground,
 };
 
 export const DarkTheme = {
@@ -36,9 +44,17 @@ export const DarkTheme = {
 
   // 🔘 Botões
   buttonBackground: Colors.success,
+  buttonExitBackground: Colors.error,
   buttonText: Colors.textLight,
 
   // 🔗 Links e destaques
   link: Colors.primary,
   primary: Colors.primary,
+
+  // 🎚 Switch
+  switchTrackOn: Colors.switchTrackOn,
+  switchTrackOff: Colors.switchTrackOff,
+  switchThumbOn: Colors.switchThumbOn,
+  switchThumbOff: Colors.switchThumbOff,
+  switchIOSBackground: Colors.switchIOSBackground,
 };

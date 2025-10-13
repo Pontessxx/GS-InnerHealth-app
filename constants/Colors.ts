@@ -24,4 +24,12 @@ export const Colors = {
   border: '#E0E0E0',
   shadow: 'rgba(0, 0, 0, 0.1)',
   overlay: 'rgba(0, 0, 0, 0.4)',
+
+  
+  // 🧭 Switch
+  switchTrackOn: '#17AF24FF',
+  switchTrackOff: '#7F7E7D',
+  switchThumbOn: '#2E8B57',
+  switchThumbOff: '#F1F1F1',
+  switchIOSBackground: '#3A3A3A',
 };
