@@ -1,11 +1,11 @@
-// app/_layout.tsx
+// app/(auth)/_layout.tsx
 import { Stack } from "expo-router";
 import { ThemeProvider, useTheme } from "@/context/ThemeContext";
 import { View, ActivityIndicator } from "react-native";
 import Toast from "react-native-toast-message";
 import { LightTheme, DarkTheme } from "@/constants/Theme";
 
-function LayoutContent() {
+function AuthLayoutContent() {
   const { isLoading, theme } = useTheme();
 
   if (isLoading) {
@@ -34,36 +34,22 @@ function LayoutContent() {
   }
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor:
-          theme === "dark"
-            ? DarkTheme.background
-            : LightTheme.background,
-      }}
-    >
+    <>
       <Stack
         screenOptions={{
           headerShown: false,
           animation: "fade",
-          contentStyle: {
-            backgroundColor:
-              theme === "dark"
-                ? DarkTheme.background
-                : LightTheme.background,
-          },
         }}
       />
       <Toast />
-    </View>
+    </>
   );
 }
 
-export default function RootLayout() {
+export default function AuthLayout() {
   return (
     <ThemeProvider>
-      <LayoutContent />
+      <AuthLayoutContent />
     </ThemeProvider>
   );
 }

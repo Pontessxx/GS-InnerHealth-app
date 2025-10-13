@@ -1,58 +1,52 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../utils/firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../utils/firebase";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import Toast from "react-native-toast-message";
 import { useTheme } from "@/context/ThemeContext";
 import { LightTheme, DarkTheme } from "@/constants/Theme";
 
-export default function SignInScreen() {
+export default function SignUpScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
   const currentTheme = theme === "light" ? LightTheme : DarkTheme;
 
-  const handleSignIn = async () => {
-    if (!email.trim() || !password.trim()) {
-      Toast.show({
-        type: "info",
-        text1: "Campos obrigatórios",
-        text2: "Preencha o e-mail e a senha para continuar.",
-      });
-      return;
-    }
-
+  const handleSignUp = async () => {
     try {
-      await signInWithEmailAndPassword(auth, email.trim(), password);
+      await createUserWithEmailAndPassword(auth, email.trim(), password);
       Toast.show({
         type: "success",
-        text1: "Login realizado!",
-        text2: "Bem-vindo de volta 👋",
+        text1: "Conta criada com sucesso!",
+        text2: "Você já pode fazer login 😊",
       });
-      router.replace("/(app)");
+      setTimeout(() => router.replace("/sign-in"), 1500);
     } catch (err: any) {
+      const message =
+        err?.code === "auth/email-already-in-use"
+          ? "E-mail já cadastrado."
+          : err?.message ?? "Tente novamente.";
+
       Toast.show({
         type: "error",
-        text1: "Erro ao entrar",
-        text2: err?.message ?? "Tente novamente.",
+        text1: "Erro ao cadastrar",
+        text2: message,
       });
     }
   };
 
-  const isFormComplete = email.trim().length > 0 && password.trim().length > 0;
-
   return (
     <View style={[styles.container, { backgroundColor: currentTheme.background }]}>
-      {/* Botão de alternar tema */}
+      {/* Botão de alternar tema (opcional, igual ao Sign-In) */}
       <TouchableOpacity style={styles.themeButton} onPress={toggleTheme}>
         <Text style={[styles.themeText, { color: currentTheme.text }]}>
           {theme === "light" ? "🌙" : "☀️"}
         </Text>
       </TouchableOpacity>
 
-      <Text style={[styles.title, { color: currentTheme.text }]}>Entrar</Text>
+      <Text style={[styles.title, { color: currentTheme.text }]}>Criar conta</Text>
 
       <TextInput
         style={[
@@ -80,7 +74,7 @@ export default function SignInScreen() {
             color: currentTheme.text,
           },
         ]}
-        placeholder="Senha"
+        placeholder="Senha (mín. 6 caracteres)"
         placeholderTextColor={currentTheme.placeholder}
         secureTextEntry
         value={password}
@@ -90,23 +84,18 @@ export default function SignInScreen() {
       <TouchableOpacity
         style={[
           styles.button,
-          {
-            backgroundColor: isFormComplete
-              ? currentTheme.buttonBackground
-              : "#7F7E7D",
-          },
+          { backgroundColor: currentTheme.buttonBackground },
         ]}
-        onPress={handleSignIn}
-        activeOpacity={isFormComplete ? 0.8 : 1}
+        onPress={handleSignUp}
       >
         <Text style={[styles.buttonText, { color: currentTheme.buttonText }]}>
-          Login
+          Cadastrar
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => router.replace("/sign-up")}>
+      <TouchableOpacity onPress={() => router.replace("/sign-in")} style={styles.bottomLinkContainer}>
         <Text style={[styles.link, { color: currentTheme.link }]}>
-          Não tem conta? Cadastre-se
+          Já tem conta? Entrar
         </Text>
       </TouchableOpacity>
     </View>
@@ -149,6 +138,13 @@ const styles = StyleSheet.create({
   link: {
     marginTop: 18,
     fontSize: 15,
+  },
+  bottomLinkContainer: {
+    position: "absolute",
+    bottom: 200, // distância da borda inferior
+    left: 0,
+    right: 0,
+    alignItems: "center",
   },
   themeButton: {
     position: "absolute",
