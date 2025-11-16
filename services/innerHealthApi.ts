@@ -69,11 +69,13 @@ export const PhysicalActivityAPI = {
 export const SleepAPI = {
   getToday: async () => handle(api.get("/sleep/today")),
   getWeek: async () => handle(api.get("/sleep/week")),
-  create: async (hours: number) => handle(api.post("/sleep", { hours })),
-  update: async (id: number, hours: number) =>
-    handle(api.put(`/sleep/${id}`, { hours })),
+  create: async (hours: number, quality: number) =>
+    handle(api.post("/sleep", { hours, quality })),
+  update: async (id: number, hours: number, quality: number) =>
+    handle(api.put(`/sleep/${id}`, { hours, quality })),
   remove: async (id: number) => handle(api.delete(`/sleep/${id}`)),
 };
+
 
 /* ============================================================
    SUNLIGHT
@@ -92,28 +94,41 @@ export const SunlightAPI = {
 /* ============================================================
    WATER
 ============================================================ */
-
 export const WaterAPI = {
   getToday: async () => handle(api.get("/water/today")),
   getWeek: async () => handle(api.get("/water/week")),
-  create: async (ml: number) => handle(api.post("/water", { ml })),
-  update: async (id: number, ml: number) =>
-    handle(api.put(`/water/${id}`, { ml })),
+
+  create: async (amount: number) =>
+    handle(api.post("/water", { amountMl: amount })),
+
+  update: async (id: number, amount: number) =>
+    handle(api.put(`/water/${id}`, { amountMl: amount })),
+
   remove: async (id: number) => handle(api.delete(`/water/${id}`)),
 };
+
 
 /* ============================================================
    TASKS
 ============================================================ */
-
 export const TaskAPI = {
   getToday: async () => handle(api.get("/tasks/today")),
   getAll: async () => handle(api.get("/tasks")),
-  create: async (name: string) => handle(api.post("/tasks", { name })),
+  create: async (title: string, description: string, date: string) =>
+  handle(
+    api.post("/tasks", {
+      title,
+      description,
+      date, 
+      isComplete: false,
+      priority: 0,
+    })
+  ),
   update: async (id: number, data: any) =>
     handle(api.put(`/tasks/${id}`, data)),
   remove: async (id: number) => handle(api.delete(`/tasks/${id}`)),
 };
+
 
 /* ============================================================
    USER PROFILE
