@@ -2,30 +2,53 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-nativ
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../utils/firebase";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Toast from "react-native-toast-message";
 import { useTheme } from "@/context/ThemeContext";
 import { LightTheme, DarkTheme } from "@/constants/Theme";
 
+import {
+  normalizeEmail,
+  isValidEmail,
+  clampLen,
+  friendlyAuthError,
+} from "@/utils/validation";
+
 export default function SignInScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setLoading] = useState(false);
+  const [failCount, setFailCount] = useState(0);
+  const lastAttemptRef = useRef<number>(0);
+
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
   const currentTheme = theme === "light" ? LightTheme : DarkTheme;
 
   const handleSignIn = async () => {
-    if (!email.trim() || !password.trim()) {
+    const now = Date.now();
+    const waitMs = Math.min(15000, failCount ? 1000 * 2 ** Math.min(4, failCount) : 0);
+    if (now - lastAttemptRef.current < waitMs) return;
+    lastAttemptRef.current = now;
+
+    const em = normalizeEmail(clampLen(email));
+    const pw = clampLen(password, 128);
+
+    // 🧩 Validação básica
+    if (!isValidEmail(em) || pw.length === 0) {
       Toast.show({
         type: "info",
-        text1: "Campos obrigatórios",
-        text2: "Preencha o e-mail e a senha para continuar.",
+        text1: "Campos inválidos",
+        text2: "Verifique e-mail e senha antes de continuar.",
       });
       return;
     }
 
     try {
-      await signInWithEmailAndPassword(auth, email.trim(), password);
+      setLoading(true);
+      await signInWithEmailAndPassword(auth, em, pw);
+
+      setFailCount(0);
       Toast.show({
         type: "success",
         text1: "Login realizado!",
@@ -33,11 +56,15 @@ export default function SignInScreen() {
       });
       router.replace("/(app)");
     } catch (err: any) {
+      setFailCount((n) => n + 1);
+      const msg = friendlyAuthError(err?.code);
       Toast.show({
         type: "error",
         text1: "Erro ao entrar",
-        text2: err?.message ?? "Tente novamente.",
+        text2: msg,
       });
+    } finally {
+      setLoading(false);
     }
   };
 

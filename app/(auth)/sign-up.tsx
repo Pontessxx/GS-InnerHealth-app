@@ -7,6 +7,15 @@ import Toast from "react-native-toast-message";
 import { useTheme } from "@/context/ThemeContext";
 import { LightTheme, DarkTheme } from "@/constants/Theme";
 
+import {
+  normalizeEmail,
+  isValidEmail,
+  isStrongPassword,
+  clampLen,
+  friendlyAuthError,
+} from "@/utils/validation";
+
+
 export default function SignUpScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,19 +24,43 @@ export default function SignUpScreen() {
   const currentTheme = theme === "light" ? LightTheme : DarkTheme;
 
   const handleSignUp = async () => {
+    const em = normalizeEmail(clampLen(email));
+    const pw = clampLen(password, 128);
+
+    // 🔍 Validações antes do envio ao Firebase
+    if (!isValidEmail(em)) {
+      Toast.show({
+        type: "info",
+        text1: "E-mail inválido",
+        text2: "Verifique o formato e tente novamente.",
+      });
+      return;
+    }
+
+    if (!isStrongPassword(pw)) {
+      Toast.show({
+        type: "info",
+        text1: "Senha fraca",
+        text2: "Use 8+ caracteres com letra maiúscula, minúscula e número.",
+      });
+      return;
+    }
+
     try {
-      await createUserWithEmailAndPassword(auth, email.trim(), password);
+      // 🚀 Criação da conta no Firebase
+      await createUserWithEmailAndPassword(auth, em, pw);
+
       Toast.show({
         type: "success",
         text1: "Conta criada com sucesso!",
         text2: "Você já pode fazer login 😊",
       });
+
+      // Redireciona após breve delay (boa UX)
       setTimeout(() => router.replace("/sign-in"), 1500);
     } catch (err: any) {
-      const message =
-        err?.code === "auth/email-already-in-use"
-          ? "E-mail já cadastrado."
-          : err?.message ?? "Tente novamente.";
+      // ❌ Tratamento seguro de erros (anti enumeração)
+      const message = friendlyAuthError(err?.code);
 
       Toast.show({
         type: "error",

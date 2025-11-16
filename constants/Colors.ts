@@ -2,7 +2,7 @@
 // Definição de cores padrão para o aplicativo
 export const Colors = {
   // 🎯 Identidade principal
-  primary: '#FFD60A',    // amarelo ouro refinado (cor de destaque)
+  primary: '#0FC9BAFF',    // amarelo ouro refinado (cor de destaque)
   secondary: '#1E1E1E',  // cinza profundo para contraste elegante
   tertiary: '#3A3A3A',   // cinza médio para fundos e seções
 
