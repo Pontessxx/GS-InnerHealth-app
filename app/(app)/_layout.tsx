@@ -9,6 +9,8 @@ import Toast from "react-native-toast-message";
 import { ThemeProvider, useTheme } from "@/context/ThemeContext";
 import { LightTheme, DarkTheme } from "@/constants/Theme";
 import { Ionicons } from "@expo/vector-icons";
+import 'react-native-url-polyfill/auto';
+import 'react-native-get-random-values';
 
 function AppTabsContent() {
   const router = useRouter();

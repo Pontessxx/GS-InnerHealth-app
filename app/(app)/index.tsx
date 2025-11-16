@@ -267,10 +267,11 @@ export default function HomeScreen() {
         <TouchableOpacity onPress={() => router.push("/sleep")} style={{ width: "48%" }}>
           <Card title="Sono" value={`${today.sleep} h`} color="#9575CD" theme={currentTheme} />
         </TouchableOpacity>
-
+        {/* 
         <Card title="Meditação" value={`${today.meditation} min`} color="#FFB74D" theme={currentTheme} />
         <Card title="Atividade" value={`${today.activity} min`} color="#81C784" theme={currentTheme} />
-        <Card title="Luz Solar" value={`${today.sunlight} min`} color="#FFF176" theme={currentTheme} />
+        <Card title="Luz Solar" value={`${today.sunlight} min`} color="#FFF176" theme={currentTheme} /> 
+        */}
 
         <TouchableOpacity onPress={() => router.push("/tasks")} style={{ width: "48%" }}>
           <Card title="Tarefas" value={`${today.tasks}`} color="#E57373" theme={currentTheme} />
